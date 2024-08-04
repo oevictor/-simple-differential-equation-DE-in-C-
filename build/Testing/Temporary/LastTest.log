@@ -1,0 +1,19 @@
+Start testing: Aug 04 12:24 -03
+----------------------------------------------------------
+Unable to find executable: /mnt/c/Users/emanu/OneDrive/Área de Trabalho/DE/build/test_populacao
+1/1 Testing: TestPopulacao
+1/1 Test: TestPopulacao
+Command: ""
+Directory: /mnt/c/Users/emanu/OneDrive/Área de Trabalho/DE/build
+"TestPopulacao" start time: 
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"TestPopulacao" end time: Aug 04 12:24 -03
+"TestPopulacao" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Aug 04 12:24 -03

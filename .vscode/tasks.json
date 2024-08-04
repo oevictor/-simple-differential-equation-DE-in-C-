@@ -1,0 +1,38 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "/usr/bin/g++",
+            "args": [
+                "-g",
+                "${workspaceFolder}/src/test_populacao.cpp",
+                "${workspaceFolder}/src/populacao.cpp",
+                "-o",
+                "${workspaceFolder}/bin/test_populacao",
+                "-I${workspaceFolder}/include",
+                "-I/usr/local/include",
+                "-L/usr/local/lib",
+                "-lgtest",
+                "-lgtest_main",
+                "-pthread"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "test",
+            "type": "shell",
+            "command": "${workspaceFolder}/bin/test_populacao",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        }
+    ]
+}

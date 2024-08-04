@@ -1,0 +1,5 @@
+/mnt/c/Users/emanu/OneDrive/Área de Trabalho/DE/build/CMakeFiles/main.dir
+/mnt/c/Users/emanu/OneDrive/Área de Trabalho/DE/build/CMakeFiles/test_populacao.dir
+/mnt/c/Users/emanu/OneDrive/Área de Trabalho/DE/build/CMakeFiles/test.dir
+/mnt/c/Users/emanu/OneDrive/Área de Trabalho/DE/build/CMakeFiles/edit_cache.dir
+/mnt/c/Users/emanu/OneDrive/Área de Trabalho/DE/build/CMakeFiles/rebuild_cache.dir
