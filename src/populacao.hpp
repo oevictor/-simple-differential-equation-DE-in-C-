@@ -5,27 +5,24 @@
 #include "selecao.hpp"
 #include <vector>
 #include <string>
+#include <fstream>
 
 class populacao {
 private:
     int tamanho;
     std::vector<std::vector<double>> individuos;
-    double min;
-    double max;
+    std::vector<double> minLimites;
+    std::vector<double> maxLimites;
     double melhorAptidao;
     int geracoesSemMelhora;
 
 public:
     // Construtor que inicializa a população
-    populacao(int tamanho, double min, double max);
+    populacao(int tamanho, const std::vector<double>& minLimites, const std::vector<double>& maxLimites);
     // Obtém o tamanho da população
     int getTamanho();
     // Define o tamanho da população
     void setTamanho(int tamanho);
-    // Obtém o valor mínimo de um gene
-    double getMin();
-    // Obtém o valor máximo de um gene
-    double getMax();
     // Inicializa a população com valores aleatórios
     void iniciarPopulacao();
     // Mostra os indivíduos da população
@@ -40,8 +37,10 @@ public:
     bool criterioParada(int maxGeracoes, double limiarMelhora, int maxGeracoesSemMelhora);
     // Obtém os indivíduos da população
     std::vector<std::vector<double>> getIndividuos();
+    // Salva o melhor indivíduo em um arquivo
+    void saveBestIndividual(const std::string& filename);
 
     ~populacao() = default;
 };
 
-#endif
+#endif // POPULACAO_HPP

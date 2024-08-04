@@ -2,22 +2,15 @@
 #include <cstdlib>
 #include <ctime>
 
-/*DE schemes are
-named. The general convention used above is DE/x/y/z, where
-DE stands for “differential evolution,” x represents a string
-denoting the base vector to be perturbed, y is the number
-of difference vectors considered for perturbation of x, and z
-stands for the type of crossover being used (exp: exponential;
-bin: binomial).
+// Para ajustar os limites de cada variavel
+void aplicarLimites(std::vector<double>& individuo, const std::vector<double>& minLimites, const std::vector<double>& maxLimites) {
+    for (size_t i = 0; i < individuo.size(); ++i) {
+        if (individuo[i] < minLimites[i]) individuo[i] = minLimites[i];
+        if (individuo[i] > maxLimites[i]) individuo[i] = maxLimites[i];
+    }
+}
 
-Differential Evolution: A Survey of the
-
-State-of-the-Art
-
-Swagatam Das, Member, IEEE, and Ponnuthurai Nagaratnam Suganthan, Senior Member, IEEE
-*/
-
-void Mutacao::aplicarMutacaoRand1(std::vector<std::vector<double>>& individuos, double F, double min, double max) {
+void Mutacao::aplicarMutacaoRand1(std::vector<std::vector<double>>& individuos, double F, const std::vector<double>& minLimites, const std::vector<double>& maxLimites) {
     int tamanho = individuos.size();
     int dimensoes = individuos[0].size();
 
@@ -25,21 +18,20 @@ void Mutacao::aplicarMutacaoRand1(std::vector<std::vector<double>>& individuos, 
 
     for (int i = 0; i < tamanho; ++i) {
         int a, b, c;
-        do { a = rand() % tamanho; } while (a == i); /*% retorna o modulo de uma operação, no caso um numero entre 0 e tamanho-1*/
-        do { b = rand() % tamanho; } while (b == i || b == a); /*|| Siginifica "or"*/
+        do { a = rand() % tamanho; } while (a == i);
+        do { b = rand() % tamanho; } while (b == i || b == a);
         do { c = rand() % tamanho; } while (c == i || c == a || c == b);
 
         std::vector<double> mutante(dimensoes);
         for (int j = 0; j < dimensoes; ++j) {
-            mutante[j] = individuos[a][j] + F * (individuos[b][j] - individuos[c][j]); /*realiza a operação classica de mutação*/
-            if (mutante[j] < min) mutante[j] = min; /*Selecionando os menores valor da mutação*/
-            if (mutante[j] > max) mutante[j] = max; /*Selecionando os maiores valor da mutação*/
+            mutante[j] = individuos[a][j] + F * (individuos[b][j] - individuos[c][j]);
         }
+        aplicarLimites(mutante, minLimites, maxLimites); /* Aplica os limites */
         individuos[i] = mutante;
     }
 }
 
-void Mutacao::aplicarMutacaoBest1(std::vector<std::vector<double>>& individuos, double F, double min, double max, double melhorAptidao) {
+void Mutacao::aplicarMutacaoBest1(std::vector<std::vector<double>>& individuos, double F, const std::vector<double>& minLimites, const std::vector<double>& maxLimites, double melhorAptidao) {
     int tamanho = individuos.size();
     int dimensoes = individuos[0].size();
 
@@ -53,14 +45,13 @@ void Mutacao::aplicarMutacaoBest1(std::vector<std::vector<double>>& individuos, 
         std::vector<double> mutante(dimensoes);
         for (int j = 0; j < dimensoes; ++j) {
             mutante[j] = melhorAptidao + F * (individuos[b][j] - individuos[c][j]);
-            if (mutante[j] < min) mutante[j] = min;
-            if (mutante[j] > max) mutante[j] = max;
         }
+        aplicarLimites(mutante, minLimites, maxLimites); /* Aplica os limites */
         individuos[i] = mutante;
     }
 }
 
-void Mutacao::aplicarMutacaoRand2(std::vector<std::vector<double>>& individuos, double F, double min, double max) {
+void Mutacao::aplicarMutacaoRand2(std::vector<std::vector<double>>& individuos, double F, const std::vector<double>& minLimites, const std::vector<double>& maxLimites) {
     int tamanho = individuos.size();
     int dimensoes = individuos[0].size();
 
@@ -77,14 +68,13 @@ void Mutacao::aplicarMutacaoRand2(std::vector<std::vector<double>>& individuos, 
         std::vector<double> mutante(dimensoes);
         for (int j = 0; j < dimensoes; ++j) {
             mutante[j] = individuos[a][j] + F * (individuos[b][j] - individuos[c][j]) + F * (individuos[d][j] - individuos[e][j]);
-            if (mutante[j] < min) mutante[j] = min;
-            if (mutante[j] > max) mutante[j] = max;
         }
+        aplicarLimites(mutante, minLimites, maxLimites); /* Aplica os limites */
         individuos[i] = mutante;
     }
 }
 
-void Mutacao::aplicarRecombinacaoBinomial(std::vector<std::vector<double>>& individuos, double CR) {
+void Mutacao::aplicarRecombinacaoBinomial(std::vector<std::vector<double>>& individuos, double CR, const std::vector<double>& minLimites, const std::vector<double>& maxLimites) {
     int tamanho = individuos.size();
     int dimensoes = individuos[0].size();
 
@@ -100,11 +90,12 @@ void Mutacao::aplicarRecombinacaoBinomial(std::vector<std::vector<double>>& indi
                 filho[j] = individuos[i][j]; // Manter o valor original
             }
         }
+        aplicarLimites(filho, minLimites, maxLimites); /* Aplica os limites */
         individuos[i] = filho;
     }
 }
 
-void Mutacao::aplicarRecombinacaoExponencial(std::vector<std::vector<double>>& individuos, double CR) {
+void Mutacao::aplicarRecombinacaoExponencial(std::vector<std::vector<double>>& individuos, double CR, const std::vector<double>& minLimites, const std::vector<double>& maxLimites) {
     int tamanho = individuos.size();
     int dimensoes = individuos[0].size();
 
@@ -125,6 +116,7 @@ void Mutacao::aplicarRecombinacaoExponencial(std::vector<std::vector<double>>& i
         for (int j = L; j < dimensoes; ++j) {
             filho[j] = individuos[i][j]; // Manter o valor original
         }
+        aplicarLimites(filho, minLimites, maxLimites); /* Aplica os limites */
         individuos[i] = filho;
     }
 }

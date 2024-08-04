@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <vector>
 
+
+// Está selecionando muito mal os valores
 // Calcula a aptidão de um indivíduo comparando os valores estimados de y com os valores reais de y
 // Isso tem que ser uma função erro e deve ser minimizada e dada por um arquivo em python 
 double Selecao::calcularAptidao(const std::vector<double>& individuo, const std::vector<double>& x, const std::vector<double>& y) {
