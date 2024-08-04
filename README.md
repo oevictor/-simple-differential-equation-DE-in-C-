@@ -1,13 +1,17 @@
 Implementação de Differential Evolution
 
 Visão Geral
+
 O que é Differential Evolution?
+
 Differential Evolution (DE) é um algoritmo de otimização estocástico baseado em população, amplamente utilizado para resolver problemas de otimização contínua. Foi introduzido por Storn e Price em 1995 e é conhecido por sua simplicidade e eficiência. O algoritmo utiliza operações de mutação, crossover e seleção para explorar e otimizar soluções em um espaço de busca.
 
 Objetivo do Projeto
+
 Este repositório contém uma implementação inicial do algoritmo Differential Evolution em C++, distribuído entre vários arquivos para modularidade e clareza. O objetivo é fornecer uma base que possa ser facilmente estendida e integrada com funções em Python.
 
 Estrutura do Projeto
+
 O projeto está organizado nos seguintes arquivos:
 
 main.cpp: Inicializa o algoritmo e executa a otimização.
