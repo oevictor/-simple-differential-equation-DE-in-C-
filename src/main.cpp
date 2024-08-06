@@ -5,16 +5,14 @@
 #include <cmath>
 #include <random>
 #include <utility>
-#include "resultado.hpp"
-#include "selecao.hpp" // Include the header file for selection
 
-// Generate test data
+// Gera dados de teste
 std::pair<std::vector<double>, std::vector<double>> generateTestData(int size, double a, double b, double c) {
     std::vector<double> x(size);
     std::vector<double> y(size);
     for (int i = 0; i < size; ++i) {
         x[i] = i;
-        y[i] = a + b * x[i] + c * x[i] * x[i]; // Polynomial: y = a + bx + cx^2
+        y[i] = a + b * x[i] + c * x[i] * x[i]; // Polinômio: y = a + bx + cx^2
     }
     return std::make_pair(x, y);
 }
@@ -22,17 +20,17 @@ std::pair<std::vector<double>, std::vector<double>> generateTestData(int size, d
 int main() {
     auto start = std::chrono::high_resolution_clock::now();
     int tamanho = 1000; 
-    std::vector<double> minLimites = {0, 0, 0}; // Limites mínimos para cada variável
-    std::vector<double> maxLimites = {5, 5, 5}; // Limites máximos para cada variável
-    double F = 0.6;
+    std::vector<double> minLimites = {-10, -10, -10}; // Limites mínimos para cada variável
+    std::vector<double> maxLimites = {10, 10, 10}; // Limites máximos para cada variável
+    double F = 0.75;
     double CR = 0.8;
     int maxGeracoes = 100; // Mais gerações para melhor convergência
     double limiarMelhora = 1e-6;
     int maxGeracoesSemMelhora = 1000;
     double limiarDiversidade = 0.01; // Limite para critério de diversidade
 
-    int dataSize = 100;
-    auto [x, y] = generateTestData(dataSize, 1.0, 2.0, 3.0);
+    int dataSize = 10;
+    auto [x, y] = generateTestData(dataSize, -8, -2.0, 3.0);
 
     populacao pop(tamanho, minLimites, maxLimites);
     pop.iniciarPopulacao();
@@ -60,19 +58,18 @@ int main() {
         // Ajusta os parâmetros F e CR adaptativamente
         pop.ajustarParametros(F, CR);
 
-        std::cout << "Geração " << g + 1 << ":" << std::endl;
-        pop.mostrarPopulacao();
+        // Salva a população da geração atual
+        std::string filename = "populacao_geracao_" + std::to_string(g + 1) + ".txt";
+        pop.savePopulation(filename);
+
+        std::cout << "Geração " << g + 1 << " completada." << std::endl;
     }
 
     std::cout << "População Final:" << std::endl;
     pop.mostrarPopulacao();
 
     auto finalPopulation = pop.getIndividuos();
-    resultado res;
-    res.saveToCSV(finalPopulation, "populacao_final.txt");
-
     pop.saveBestIndividual("best_individual.txt");
-    res.saveToCSV(melhoresCandidatos, "melhores_candidatos.txt");
 
     auto stop = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> diff = stop - start;

@@ -2,6 +2,21 @@
 #include <cstdlib>
 #include <ctime>
 
+
+/* DE/rand/1: Estratégia rand/1 do DE
+vi = xr1 + F * (xr2 - xr3); // Atualização do vetor vi usando um vetor mutante
+
+ DE/rand/2: Estratégia rand/2 do DE
+vi = xr1 + F * (xr2 - xr3) + F * (xr4 - xr5); // Atualização com dois vetores mutantes
+
+ DE/best/1: Estratégia best/1 do DE
+vi = xbest + F * (xr1 - xr2); // Atualização usando o melhor vetor da população
+
+ DE/best/2: Estratégia best/2 do DE
+vi = xbest + F * (xr1 - xr2) + F * (xr3 - xr4); // Atualização usando o melhor vetor e dois vetores mutantes -> tem que implementar essa
+*/
+
+
 // Para ajustar os limites de cada variavel
 void aplicarLimites(std::vector<double>& individuo, const std::vector<double>& minLimites, const std::vector<double>& maxLimites) {
     for (size_t i = 0; i < individuo.size(); ++i) {
@@ -14,7 +29,7 @@ void Mutacao::aplicarMutacaoRand1(std::vector<std::vector<double>>& individuos, 
     int tamanho = individuos.size();
     int dimensoes = individuos[0].size();
 
-    srand(static_cast<unsigned int>(time(0))); // Semente para gerador de números aleatórios
+    srand(static_cast<unsigned int>(time(0))); 
 
     for (int i = 0; i < tamanho; ++i) {
         int a, b, c;
@@ -74,6 +89,7 @@ void Mutacao::aplicarMutacaoRand2(std::vector<std::vector<double>>& individuos, 
     }
 }
 
+/*Recombinação == crosover*/
 void Mutacao::aplicarRecombinacaoBinomial(std::vector<std::vector<double>>& individuos, double CR, const std::vector<double>& minLimites, const std::vector<double>& maxLimites) {
     int tamanho = individuos.size();
     int dimensoes = individuos[0].size();
