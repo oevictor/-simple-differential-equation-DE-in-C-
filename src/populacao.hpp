@@ -15,6 +15,7 @@ private:
     std::vector<double> maxLimites;
     double melhorAptidao;
     int geracoesSemMelhora;
+    std::vector<double>aptidoesHistorico;
 
 public:
     // Construtor que inicializa a população
@@ -32,13 +33,18 @@ public:
     // Aplica a recombinação aos indivíduos da população, croosver
     void recombinacao(double CR, const std::string& estrategia);
     // Aplica a seleção aos indivíduos da população
-    void selecao(const std::vector<double>& x, const std::vector<double>& y);
+    void selecao(const std::vector<double>& x, const std::vector<double>& y, std::vector<std::vector<double>>& melhoresCandidatos);
     // Verifica se o critério de parada foi alcançado
     bool criterioParada(int maxGeracoes, double limiarMelhora, int maxGeracoesSemMelhora);
     // Obtém os indivíduos da população
     std::vector<std::vector<double>> getIndividuos();
     // Salva o melhor indivíduo em um arquivo
     void saveBestIndividual(const std::string& filename);
+    // Verifica a diversidade da população
+    bool criterioDiversidade(double limiarDiversidade);
+    // Ajusta os parâmetros F e CR adaptativamente 
+    void ajustarParametros(double& F, double& CR);
+
 
     ~populacao() = default;
 };

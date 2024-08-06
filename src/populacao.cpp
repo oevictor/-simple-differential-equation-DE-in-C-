@@ -59,7 +59,7 @@ void populacao::mostrarPopulacao() {
 
 // Aplica a mutação aos indivíduos da população
 void populacao::mutacao(double F, const std::string& estrategia) {
-    Mutacao mutacao; // Create an instance of the Mutacao class
+    Mutacao mutacao; // Intanciando a classe mutação 
     std::cout << "Aplicando mutação com estratégia " << estrategia << " e fator F = " << F << std::endl;
     if (estrategia == "rand/1") {
         mutacao.aplicarMutacaoRand1(individuos, F, minLimites, maxLimites);
@@ -73,12 +73,12 @@ void populacao::mutacao(double F, const std::string& estrategia) {
 }
 
 // Aplica a seleção aos indivíduos da população
-void populacao::selecao(const std::vector<double>& x, const std::vector<double>& y) {
+void populacao::selecao(const std::vector<double>& x, const std::vector<double>& y, std::vector<std::vector<double>>& melhoresCandidatos) {
     std::cout << "Aplicando seleção baseada nos dados de aptidão." << std::endl;
-    Selecao selecao; // Create an instance of the Selecao class
-    selecao.aplicarSelecao(individuos, x, y, melhorAptidao, geracoesSemMelhora);
+    Selecao::aplicarSelecao(individuos, x, y, melhorAptidao, geracoesSemMelhora, melhoresCandidatos);
     std::cout << "Melhor aptidão atual: " << melhorAptidao << std::endl;
 }
+
 
 // Aplica a recombinação aos indivíduos da população
 void populacao::recombinacao(double CR, const std::string& estrategia) {
@@ -108,7 +108,7 @@ std::vector<std::vector<double>> populacao::getIndividuos() {
 void populacao::saveBestIndividual(const std::string& filename) {
     std::ofstream file(filename);
     if (file.is_open()) {
-        const auto& bestIndividual = individuos[0]; // Assuming the first individual is the best
+        const auto& bestIndividual = individuos[0]; // Logica teste apenas para ver se esta funcioando, tem que ser implementada junto com a função erro que vai ser implementada
         for (size_t i = 0; i < bestIndividual.size(); ++i) {
             file << bestIndividual[i];
             if (i < bestIndividual.size() - 1) file << ",";
@@ -118,5 +118,29 @@ void populacao::saveBestIndividual(const std::string& filename) {
         std::cout << "arquivo " << filename << " salvo." << std::endl;
     } else {
         std::cerr << "Deu ruim " << filename << std::endl;
+    }
+}
+// Verifica se a diversidade da população é menor que um limite
+bool populacao::criterioDiversidade(double limiarDiversidade) {
+    double diversidade = 0.0;
+    for (size_t i = 0; i < individuos.size(); ++i) {
+        for (size_t j = i + 1; j < individuos.size(); ++j) {
+            for (size_t k = 0; k < individuos[i].size(); ++k) {
+                diversidade += std::abs(individuos[i][k] - individuos[j][k]);
+            }
+        }
+    }
+    diversidade /= (individuos.size() * (individuos.size() - 1) / 2);
+    return diversidade < limiarDiversidade;
+}
+
+// Ajusta os parâmetros F e CR adaptativamente
+void populacao::ajustarParametros(double& F, double& CR) {
+    if (geracoesSemMelhora > 10) { // Se não houve melhora por mais de 10 gerações
+        F = std::min(1.0, F + 0.1); // Aumenta F até um máximo de 1.0
+        CR = std::max(0.0, CR - 0.1); // Diminui CR até um mínimo de 0.0
+    } else {
+        F = std::max(0.4, F - 0.1); // Diminui F até um mínimo de 0.4
+        CR = std::min(0.9, CR + 0.1); // Aumenta CR até um máximo de 0.9
     }
 }

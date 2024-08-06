@@ -7,9 +7,9 @@ SRC_DIR = src
 BIN_DIR = bin
 
 # Source files
-SRC_FILES = $(SRC_DIR)/main.cpp $(SRC_DIR)/populacao.cpp $(SRC_DIR)/mutacao.cpp $(SRC_DIR)/selecao.cpp
+SRC_FILES = $(SRC_DIR)/main.cpp $(SRC_DIR)/populacao.cpp $(SRC_DIR)/mutacao.cpp $(SRC_DIR)/selecao.cpp $(SRC_DIR)/resultado.cpp
 # Object files
-OBJ_FILES = $(SRC_DIR)/main.o $(SRC_DIR)/populacao.o $(SRC_DIR)/mutacao.o $(SRC_DIR)/selecao.o
+OBJ_FILES = $(SRC_DIR)/main.o $(SRC_DIR)/populacao.o $(SRC_DIR)/mutacao.o $(SRC_DIR)/selecao.o $(SRC_DIR)/resultado.o
 
 # Executable name
 MAIN_EXEC = $(BIN_DIR)/main
