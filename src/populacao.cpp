@@ -14,11 +14,6 @@
 #include <cstdint>
 #include <fstream>
 
-// Gera um valor aleatório entre min e max
-double random_value(double min, double max) {
-    return min + static_cast<double>(rand()) / (static_cast<double>(RAND_MAX / (max - min)));
-}
-
 // Construtor que inicializa a população com valores padrão.
 populacao::populacao(int tamanho, const std::vector<double>& minLimites, const std::vector<double>& maxLimites) 
     : tamanho(tamanho), minLimites(minLimites), maxLimites(maxLimites), melhorAptidao(std::numeric_limits<double>::max()), geracoesSemMelhora(0) {
@@ -33,30 +28,33 @@ int populacao::getTamanho() {
 // Define o tamanho da população
 void populacao::setTamanho(int tamanho) {
     this->tamanho = tamanho;
-    individuos.resize(tamanho);
+    individuos.resize(tamanho, std::vector<double>(minLimites.size()));
 }
 
 // Inicializa a população com valores aleatórios
-//tentar inciar isso daqui com sobol_sequence
 void populacao::iniciarPopulacao() {
-    srand(static_cast<unsigned int>(time(0)));
+    std::vector<std::vector<double>> sobolSeq = Selecao::sobol_sequence(tamanho, minLimites.size());
     for (int i = 0; i < tamanho; ++i) {
         for (std::vector<double>::size_type j = 0; j < individuos[i].size(); ++j) {
-            individuos[i][j] = random_value(minLimites[j], maxLimites[j]);
+            double value = minLimites[j] + sobolSeq[i][j] * (maxLimites[j] - minLimites[j]);
+            individuos[i][j] = value;
         }
     }
     std::cout << "População inicializada com " << tamanho << " indivíduos." << std::endl;
 }
 
 // Mostra os indivíduos da população
-void populacao::mostrarPopulacao() {
+std::vector<std::vector<double>> populacao::mostrarPopulacao() {
+    std::vector<std::vector<double>> allIndividuals;
     for (int i = 0; i < tamanho; ++i) {
         std::cout << "Indivíduo " << i + 1 << ": ";
         for (std::vector<double>::size_type j = 0; j < individuos[i].size(); ++j) {
             std::cout << individuos[i][j] << " ";
         }
         std::cout << std::endl;
+        allIndividuals.push_back(individuos[i]);
     }
+    return allIndividuals;
 }
 
 // Aplica a mutação aos indivíduos da população
@@ -66,7 +64,8 @@ void populacao::mutacao(double F, const std::string& estrategia) {
     if (estrategia == "rand/1") {
         mutacao.aplicarMutacaoRand1(individuos, F, minLimites, maxLimites);
     } else if (estrategia == "best/1") {
-        mutacao.aplicarMutacaoBest1(individuos, F, minLimites, maxLimites, melhorAptidao);
+        std::vector<double> melhorIndividuo = individuos[0]; // Exemplo: supomos que o melhor indivíduo é o primeiro
+        mutacao.aplicarMutacaoBest1(individuos, F, minLimites, maxLimites, melhorIndividuo);
     } else if (estrategia == "rand/2") {
         mutacao.aplicarMutacaoRand2(individuos, F, minLimites, maxLimites);
     } else {
@@ -102,7 +101,7 @@ bool populacao::criterioParada(int maxGeracoes, double limiarMelhora, int maxGer
 }
 
 // Retorna os indivíduos da população
-std::vector<std::vector<double>> populacao::getIndividuos() {
+std::vector<std::vector<double>>& populacao::getIndividuos() {
     return individuos;
 }
 
@@ -164,4 +163,13 @@ void populacao::savePopulation(const std::string& filename) {
     } else {
         std::cerr << "Não foi possível salvar a população no arquivo " << filename << std::endl;
     }
+}
+
+// Métodos para acessar os membros privados
+double populacao::getMelhorAptidao() const {
+    return melhorAptidao;
+}
+
+int populacao::getGeracoesSemMelhora() const {
+    return geracoesSemMelhora;
 }

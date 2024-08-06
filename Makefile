@@ -1,43 +1,39 @@
-# Compiler and flags
+# Definições de variáveis
 CXX = g++
 CXXFLAGS = -std=c++17 -Iinclude -I/usr/include/gtest -g -pthread
+LDFLAGS = -L/usr/lib -lgtest -lgtest_main
 
-# Directories
-SRC_DIR = src
-BIN_DIR = bin
+# Definições de arquivos fonte
+SRCS = src/main.cpp src/populacao.cpp src/mutacao.cpp src/selecao.cpp src/resultado.cpp
+TEST_SRCS = src/test_main.cpp src/populacao.cpp src/mutacao.cpp src/selecao.cpp src/resultado.cpp
 
-# Source files
-SRC_FILES = $(SRC_DIR)/main.cpp $(SRC_DIR)/populacao.cpp $(SRC_DIR)/mutacao.cpp $(SRC_DIR)/selecao.cpp $(SRC_DIR)/resultado.cpp
-# Object files
-OBJ_FILES = $(SRC_DIR)/main.o $(SRC_DIR)/populacao.o $(SRC_DIR)/mutacao.o $(SRC_DIR)/selecao.o $(SRC_DIR)/resultado.o
+# Definições de arquivos objeto
+OBJS = $(SRCS:.cpp=.o)
+TEST_OBJS = $(TEST_SRCS:.cpp=.o)
 
-# Executable name
-MAIN_EXEC = $(BIN_DIR)/main
+# Definições de executáveis
+TARGET = bin/main
+TEST_TARGET = bin/test_main
 
-# Libraries
-LIBS = -L/usr/lib -lgtest -lgtest_main
+# Compilação dos alvos
+all: $(TARGET) $(TEST_TARGET)
 
-# Targets
-all: $(MAIN_EXEC)
+run: $(TARGET)
+	./$(TARGET)
 
-# Main application
-$(MAIN_EXEC): $(OBJ_FILES) | $(BIN_DIR)
-	$(CXX) $(CXXFLAGS) $(OBJ_FILES) $(LIBS) -o $(MAIN_EXEC)
+test: $(TEST_TARGET)
+	./$(TEST_TARGET)
 
-# Ensure bin directory exists
-$(BIN_DIR):
-	mkdir -p $(BIN_DIR)
+# Linkagem do executável principal
+$(TARGET): $(OBJS)
+	$(CXX) $(CXXFLAGS) -o $@ $^
 
-# Object file rules
-$(SRC_DIR)/%.o: $(SRC_DIR)/%.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+# Linkagem do executável de teste
+$(TEST_TARGET): $(TEST_OBJS)
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 
-# Run application
-run: $(MAIN_EXEC)
-	./$(MAIN_EXEC)
-
-# Clean up
+# Limpeza dos arquivos objeto e executáveis
 clean:
-	rm -f $(OBJ_FILES) $(BIN_DIR)/*
+	rm -f $(OBJS) $(TEST_OBJS) $(TARGET) $(TEST_TARGET)
 
-.PHONY: all clean run
+.PHONY: clean all run test

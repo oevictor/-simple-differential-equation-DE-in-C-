@@ -22,7 +22,7 @@ uint32_t sobol(uint32_t i) {
     return x;
 }
 
-std::vector<std::vector<double>> sobol_sequence(int N, int D) {
+std::vector<std::vector<double>> Selecao::sobol_sequence(int N, int D) {
     std::vector<std::vector<double>> sequence(N, std::vector<double>(D));
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < D; j++) {
@@ -63,7 +63,8 @@ std::vector<double> Selecao::tournamentSelection(const std::vector<std::pair<dou
 
     return tournament[0].second;
 }
-//Os melhores indivíduos são selecionados com base em suas aptidões a elite
+
+// Os melhores indivíduos são selecionados com base em suas aptidões a elite
 std::vector<std::vector<double>> Selecao::getBestIndividuals(const std::vector<std::vector<double>>& individuos, const std::vector<double>& x, const std::vector<double>& y, int numElites) {
     std::vector<std::pair<double, std::vector<double>>> aptidoes;
     for (const auto& individuo : individuos) {
@@ -86,30 +87,30 @@ std::vector<std::vector<double>> Selecao::getBestIndividuals(const std::vector<s
 // Aplica o processo de seleção à população com elitismo
 void Selecao::aplicarSelecao(std::vector<std::vector<double>>& individuos, const std::vector<double>& x, const std::vector<double>& y, 
 double& melhorAptidao, int& geracoesSemMelhora, std::vector<std::vector<double>>& melhoresCandidatos, int numElites) {
-    // Find the best individuals (elites)
+    // Encontra os melhores indivíduos (elites)
     std::vector<std::vector<double>> elites = getBestIndividuals(individuos, x, y, numElites);
 
-    // Calculate the aptitudes of all individuals
+    // Calcula as aptidões de todos os indivíduos
     std::vector<std::pair<double, std::vector<double>>> aptidoes;
     for (const auto& individuo : individuos) {
         double aptidao = calcularAptidao(individuo, x, y);
         aptidoes.push_back({aptidao, individuo});
     }
 
-    // Create the new population using tournament selection
+    // Cria a nova população usando seleção por torneio
     std::vector<std::vector<double>> novaPopulacao;
     int tournamentSize = 3;
-    for (size_t i = 0; i < individuos.size() - numElites; ++i) { // Reserve space for elites
+    for (size_t i = 0; i < individuos.size() - numElites; ++i) { // Reserva espaço para elites
         novaPopulacao.push_back(tournamentSelection(aptidoes, tournamentSize));
     }
 
-    // Add the elites to the new population
+    // Adiciona os elites à nova população
     novaPopulacao.insert(novaPopulacao.end(), elites.begin(), elites.end());
 
-    // Update the population
+    // Atualiza a população
     individuos = novaPopulacao;
 
-    // Update the best aptitude
+    // Atualiza a melhor aptidão
     double novaMelhorAptidao = aptidoes[0].first;
     if (novaMelhorAptidao < melhorAptidao) {
         melhorAptidao = novaMelhorAptidao;
@@ -118,6 +119,7 @@ double& melhorAptidao, int& geracoesSemMelhora, std::vector<std::vector<double>>
         geracoesSemMelhora++;
     }
 
-    // Add the best individual of the current generation to the best candidates
+    // Adiciona o melhor indivíduo da geração atual aos melhores candidatos
     melhoresCandidatos.push_back(aptidoes[0].second);
 }
+

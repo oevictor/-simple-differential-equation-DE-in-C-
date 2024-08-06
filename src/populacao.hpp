@@ -26,17 +26,17 @@ public:
     // Inicializa a população com valores aleatórios
     void iniciarPopulacao();
     // Mostra os indivíduos da população
-    void mostrarPopulacao();
+    std::vector<std::vector<double>> mostrarPopulacao();
     // Aplica a mutação aos indivíduos da população
     void mutacao(double F, const std::string& estrategia);
-    // Aplica a recombinação aos indivíduos da população, crossover
+    // Aplica a recombinação aos indivíduos da população
     void recombinacao(double CR, const std::string& estrategia);
     // Aplica a seleção aos indivíduos da população
     void selecao(const std::vector<double>& x, const std::vector<double>& y, std::vector<std::vector<double>>& melhoresCandidatos);
     // Verifica se o critério de parada foi alcançado
     bool criterioParada(int maxGeracoes, double limiarMelhora, int maxGeracoesSemMelhora);
     // Obtém os indivíduos da população
-    std::vector<std::vector<double>> getIndividuos();
+    std::vector<std::vector<double>>& getIndividuos(); // Retorna uma referência não constante
     // Salva o melhor indivíduo em um arquivo
     void saveBestIndividual(const std::string& filename);
     // Salva a população inteira em um arquivo
@@ -45,6 +45,10 @@ public:
     bool criterioDiversidade(double limiarDiversidade);
     // Ajusta os parâmetros F e CR adaptativamente 
     void ajustarParametros(double& F, double& CR);
+
+    // Métodos para acessar os membros privados
+    double getMelhorAptidao() const;
+    int getGeracoesSemMelhora() const;
 
     ~populacao() = default;
 };

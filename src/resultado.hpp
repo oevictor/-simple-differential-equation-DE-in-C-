@@ -9,22 +9,13 @@
 class resultado {
 public:
     // Salva os dados em um arquivo CSV
-    static void saveToCSV(const std::vector<std::vector<double>>& data, const std::string& filename) {
-        std::ofstream file(filename);
-        if (file.is_open()) {
-            for (const auto& row : data) {
-                for (size_t i = 0; i < row.size(); ++i) {
-                    file << row[i];
-                    if (i < row.size() - 1) file << ",";
-                }
-                file << "\n";
-            }
-            file.close();
-            std::cout << "Arquivo " << filename << " salvo com sucesso." << std::endl;
-        } else {
-            std::cerr << "Não foi possível salvar o arquivo " << filename << std::endl;
-        }
-    }
+    static void saveToCSV(const std::vector<std::vector<double>>& data, const std::string& filename);
+
+    // Carrega os dados de um arquivo CSV
+    static std::vector<std::vector<double>> loadFromCSV(const std::string& filename);
+
+    // Mostra os dados carregados
+    static void mostrarDados(const std::vector<std::vector<double>>& data);
 };
 
 #endif // RESULTADO_HPP
