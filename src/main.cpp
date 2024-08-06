@@ -21,7 +21,7 @@ std::pair<std::vector<double>, std::vector<double>> generateTestData(int size, d
 
 int main() {
     auto start = std::chrono::high_resolution_clock::now();
-    int tamanho = 100; // Aumentou o tamanho da população para melhor exploração
+    int tamanho = 1000; 
     std::vector<double> minLimites = {0, 0, 0}; // Limites mínimos para cada variável
     std::vector<double> maxLimites = {5, 5, 5}; // Limites máximos para cada variável
     double F = 0.6;

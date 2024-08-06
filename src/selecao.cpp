@@ -67,16 +67,31 @@ void Selecao::aplicarSelecao(std::vector<std::vector<double>>& individuos, const
     // Adiciona o melhor indivíduo da geração atual aos melhores candidatos
     melhoresCandidatos.push_back(aptidoes[0].second);
 }
-// Implementation of Sobol sequence generator
+// Implementation of Sobol sequence generator using direction numbers
+// Reference: https://en.wikipedia.org/wiki/Sobol_sequence
+//Explicar dps o que é isso
+
 std::vector<std::vector<double>> sobol_sequence(int N, int D) {
     std::vector<std::vector<double>> sequence(N, std::vector<double>(D));
-    std::random_device rd;
-    std::mt19937 gen(rd());
+    std::vector<std::vector<uint32_t>> directions(D, std::vector<uint32_t>(32, 0));
+    
+    // Initialize direction numbers for each dimension
+    for (int d = 0; d < D; ++d) {
+        for (int i = 0; i < 32; ++i) {
+            directions[d][i] = 1 << (31 - i);
+        }
+    }
 
+    // Generate Sobol sequence points
+    std::vector<uint32_t> x(D, 0);
     for (int i = 0; i < N; ++i) {
-        for (int j = 0; j < D; ++j) {
-            std::uniform_real_distribution<> dis(0.0, 1.0);
-            sequence[i][j] = dis(gen);
+        int j = 0;
+        for (int k = i; (k & 1) == 1; k >>= 1) {
+            ++j;
+        }
+        for (int d = 0; d < D; ++d) {
+            x[d] ^= directions[d][j];
+            sequence[i][d] = static_cast<double>(x[d]) / (1ULL << 32);
         }
     }
 
